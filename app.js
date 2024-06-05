@@ -18,7 +18,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
+// const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
 app.use(cookieParser());
 
 // app.use(
@@ -50,20 +50,21 @@ app.use(cookieParser());
 //   })
 // );
 
+app.use(cors());
  
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  })
-);
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true,
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//   })
+// );
 
 
 app.use(express.json());
@@ -79,7 +80,12 @@ app.use("/api/v1/admin", adminRoute);
 app.use("/api/v1", orderRoute);
 app.use("/api/v1", verifyUserRoute);
 
-
+if (process.env.NODE_ENV === "prod") {
+  app.use(express.static(path.join(__dirname, "./dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "./dist/index.html"));
+  });
+}
 app.use(globalResponseController);
 
 export default app;
