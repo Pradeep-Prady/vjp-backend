@@ -8,6 +8,7 @@ const DB_URL = process.env.DATABASE_URI;
 connectDatabase(DB_URL);
 
 const port = process.env.PORT || 3004;
+
 const server = app.listen(port, () => {
   console.log(
     "VJP API " +

@@ -88,21 +88,7 @@ export const getCategory = async (req, res, next) => {
   }
 };
 
-// export const deleteCategory = async (req, res, next) => {
-//   const { id } = req.params;
-//   if (_.isEmpty(id)) {
-//     return next(new AppError("Category id is required", BADREQUEST));
-//   }
-//   const category = await remove(id);
-
-//   if (category) {
-//     return next(
-//       new AppSuccess(category, "Category Deleted successfully", SUCCESS)
-//     );
-//   } else {
-//     return next(new AppError("Something went wrong", BADREQUEST));
-//   }
-// };
+ 
 
 export const deleteCategory = async (req, res, next) => {
   const { id } = req.params;
@@ -193,19 +179,7 @@ export const updateSubCategory = async (req, res, next) => {
   }
 };
 
-// export const deleteSubCategory = async (req, res, next) => {
-//   const { categoryID, subCategoryID } = req.params;
-
-//   const updatedOne = await removeSub(categoryID, subCategoryID);
-
-//   if (updatedOne) {
-//     return next(
-//       new AppSuccess(updatedOne, "Sub Category removed successfully", SUCCESS)
-//     );
-//   } else {
-//     return next(new AppError("No Sub category found", NOTFOUND));
-//   }
-// };
+ 
 
 export const deleteSubCategory = async (req, res, next) => {
   const { categoryID, subCategoryID } = req.params;

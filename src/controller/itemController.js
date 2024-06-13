@@ -95,7 +95,7 @@ export const updateItem = async (req, res, next) => {
   // Add new images if there are any
   if (req?.files?.length > 0) {
     req.files.forEach((file) => {
-      // let url = `${BASE_URL}/src/uploads/item/${file.originalname}`;
+     
       let url = `${BASE_URL}/src/uploads/item/${req.body.itemTitle}/${file.originalname}`;
       images.push(url);
     });
