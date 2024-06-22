@@ -69,8 +69,8 @@ export default async function sendEmail(options) {
     from: `${process.env.SMTP_FROM_NAME} <${process.env.SMTP_FROM_EMAIL}>`,
     to: options.email,
     subject: options.subject,
-    template: options.template, // Specify the template name here
-    context: options.context,   // Pass dynamic data to the template
+    template: options.template,
+    context: options.context,
   };
 
   await transporter.sendMail(message, (err, info) => {

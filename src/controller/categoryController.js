@@ -18,7 +18,12 @@ import {
 import AppError from "../utils/response-handlers/app-error.js";
 import { validateCreateCategory } from "./../utils/validator/validateCategory.js";
 import Item from "../model/itemsModel.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 export const CreateCategory = async (req, res, next) => {
   const { error } = validateCreateCategory.validate(req.body);
 
@@ -88,8 +93,6 @@ export const getCategory = async (req, res, next) => {
   }
 };
 
- 
-
 export const deleteCategory = async (req, res, next) => {
   const { id } = req.params;
 
@@ -105,6 +108,37 @@ export const deleteCategory = async (req, res, next) => {
   // Delete all items under this category
   const items = await Item.find({ category: id });
   for (let item of items) {
+    // Remove item images and folder
+    if (item.images && item.images.length > 0) {
+      const baseUrl = `${req.protocol}://${req.get("host")}`;
+      const baseDir = path.resolve(
+        __dirname,
+        "..",
+        "..",
+        "src",
+        "uploads",
+        "item"
+      ); // Adjust baseDir to your actual uploads folder
+
+      // Get the folder path from the first image URL
+      const firstImageUrl = item.images[0];
+      const relativeFolderPath = firstImageUrl
+        .replace(baseUrl, "")
+        .split("/uploads/item/")[1]
+        .split("/")[0];
+      const folderPath = path.join(baseDir, relativeFolderPath);
+
+      console.log(`Attempting to delete folder at path: ${folderPath}`); // Log the folder path
+
+      try {
+        fs.rmdirSync(folderPath, { recursive: true });
+        console.log(`Successfully deleted folder: ${folderPath}`);
+      } catch (err) {
+        console.error(`Failed to delete folder: ${folderPath}`, err);
+      }
+    }
+
+    // Remove the item from the database
     await Item.findByIdAndDelete(item._id);
   }
 
@@ -179,8 +213,6 @@ export const updateSubCategory = async (req, res, next) => {
   }
 };
 
- 
-
 export const deleteSubCategory = async (req, res, next) => {
   const { categoryID, subCategoryID } = req.params;
 
@@ -206,13 +238,43 @@ export const deleteSubCategory = async (req, res, next) => {
 
   // Remove items associated with this subcategory
   const items = await Item.find({ subCategoryId: subCategoryID });
+
   for (let item of items) {
+    // Remove item images and folder
+    if (item.images && item.images.length > 0) {
+      const baseUrl = `${req.protocol}://${req.get("host")}`;
+      const baseDir = path.resolve(
+        __dirname,
+        "..",
+        "..",
+        "src",
+        "uploads",
+        "item"
+      ); // Adjust baseDir to your actual uploads folder
+
+      // Get the folder path from the first image URL
+      const firstImageUrl = item.images[0];
+      const relativeFolderPath = firstImageUrl
+        .replace(baseUrl, "")
+        .split("/uploads/item/")[1]
+        .split("/")[0];
+      const folderPath = path.join(baseDir, relativeFolderPath);
+
+      console.log(`Attempting to delete folder at path: ${folderPath}`); // Log the folder path
+
+      try {
+        fs.rmdirSync(folderPath, { recursive: true });
+        console.log(`Successfully deleted folder: ${folderPath}`);
+      } catch (err) {
+        console.error(`Failed to delete folder: ${folderPath}`, err);
+      }
+    }
+
+    // Remove the item from the database
     await Item.findByIdAndDelete(item._id);
   }
 
   // Remove the subcategory from the category
-  // category.subCategorys.splice(subCategoryIndex, 1);
-  // await category.save();
 
   const updatedOne = await removeSub(categoryID, subCategoryID);
 

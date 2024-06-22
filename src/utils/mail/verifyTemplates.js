@@ -86,7 +86,7 @@ const verifyedSuccess = (BASE_URL, fName, lName) => {
 		  Your email has been verified. You can now log in to your account.
 		</p>
 		<div class="button-container">
-		  <a href="http://localhost:5173/account/sign-in" class="btn">Go to Login</a>
+		  <a href="http://vjpenterprises.in/account/sign-in" class="btn">Go to Login</a>
 		</div>
 		<p class="footer">2024 &#169; All rights reserved to VJP Enterprise</p>
 	  </div>

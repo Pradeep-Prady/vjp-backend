@@ -3,10 +3,23 @@ import AppSuccess from "../utils/response-handlers/app-success.js";
 import { BADREQUEST, SUCCESS } from "../utils/constants/statusCode.js";
 import AppError from "../utils/response-handlers/app-error.js";
 import { validateCreateItem } from "../utils/validator/validateItem.js";
-import { add, getAll, getLatest, getOne, remove, update } from "../service/itemService.js";
+import {
+  add,
+  getAll,
+  getLatest,
+  getOne,
+  remove,
+  update,
+} from "../service/itemService.js";
 import Item from "../model/itemsModel.js";
 import { getOne as getCategory } from "../service/categotyService.js";
 import APIFeatures from "../utils/api/apiFeatures.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const CreateItem = async (req, res, next) => {
   let images = [];
@@ -95,7 +108,6 @@ export const updateItem = async (req, res, next) => {
   // Add new images if there are any
   if (req?.files?.length > 0) {
     req.files.forEach((file) => {
-     
       let url = `${BASE_URL}/src/uploads/item/${req.body.itemTitle}/${file.originalname}`;
       images.push(url);
     });
@@ -231,6 +243,38 @@ export const deleteItem = async (req, res, next) => {
     }
   }
 
+  // Remove the images associated with the item
+
+  // Remove the images associated with the item
+  if (item.images && item.images.length > 0) {
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    const baseDir = path.resolve(
+      __dirname,
+      "..",
+      "..",
+      "src",
+      "uploads",
+      "item"
+    ); // Adjust baseDir to your actual uploads folder
+
+    // Get the folder path from the first image URL
+    const firstImageUrl = item.images[0];
+    const relativeFolderPath = firstImageUrl
+      .replace(baseUrl, "")
+      .split("/uploads/item/")[1]
+      .split("/")[0];
+    const folderPath = path.join(baseDir, relativeFolderPath);
+
+    console.log(`Attempting to delete folder at path: ${folderPath}`); // Log the folder path
+
+    try {
+      fs.rmdirSync(folderPath, { recursive: true });
+      console.log(`Successfully deleted folder: ${folderPath}`);
+    } catch (err) {
+      console.error(`Failed to delete folder: ${folderPath}`, err);
+    }
+  }
+
   // Remove the item
   const deletedItem = await remove(id);
   if (!deletedItem) {
@@ -238,6 +282,7 @@ export const deleteItem = async (req, res, next) => {
   }
 
   return next(new AppSuccess(deletedItem, "Item Deleted successfully", 200));
+  // return next(new AppSuccess(item, "Item Deleted successfully", 200));
 };
 
 export const getLatestItems = async (req, res, next) => {

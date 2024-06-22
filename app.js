@@ -9,7 +9,6 @@ import userRoute from "./src/route/user.js";
 import itemRoute from "./src/route/item.js";
 import adminRoute from "./src/route/admin.js";
 import orderRoute from "./src/route/order.js";
- 
 
 import globalResponseController from "./src/utils/response-handlers/global-response-controller.js";
 import verifyUserRoute from "./src/route/verifyUser.js";
@@ -24,6 +23,8 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:8000",
   "https://vjp.onrender.com",
+  "https://aejsinfo.com",
+  "http://aejsinfo.com",
   "http://127.0.0.1:5173",
 ];
 app.use(cookieParser());
@@ -83,12 +84,12 @@ app.use("/api/v1/admin", adminRoute);
 app.use("/api/v1", orderRoute);
 app.use("/api/v1", verifyUserRoute);
 
-if (process.env.NODE_ENV === "prod") {
+// if (process.env.NODE_ENV === "prod") {
   app.use(express.static(path.join(__dirname, "./dist")));
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "./dist/index.html"));
   });
-}
+// }
 
 app.use(globalResponseController);
 
