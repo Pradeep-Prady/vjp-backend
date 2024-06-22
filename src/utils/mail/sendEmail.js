@@ -28,6 +28,15 @@
 //   });
 // }
 
+
+// SMTP_USER="pradeepprady005@gmail.com"
+// SMTP_PASS=nvbmmriwxfhqyblv
+// SMTP_FROM_NAME:VJP
+// SMTP_FROM_EMAIL:noreply@vjp.com
+
+
+
+
 import nodemailer from "nodemailer";
 import nodemailerHbs from "nodemailer-express-handlebars";
 import path from "path";
