@@ -18,8 +18,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const router = Router();
 
- 
-
 const createDirectory = (dirPath) => {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
@@ -52,6 +50,7 @@ const upload = multer({
     },
   }),
 });
+
 // Admin
 
 router

@@ -42,6 +42,14 @@ export const CreateItem = async (req, res, next) => {
 
   const category = await getCategory(data[0]);
 
+  if (!category) {
+    return next(new AppError("Category not found", BADREQUEST));
+  }
+
+  if (category.subCategorys.length < 1) {
+    return next(new AppError("Sub Category not found", BADREQUEST));
+  }
+
   const subCategoryName = category.subCategorys.find(
     (subCategory) => subCategory._id.toString() === data[1]
   );
@@ -190,12 +198,23 @@ export const updateItem = async (req, res, next) => {
 };
 
 export const getItems = async (req, res, next) => {
+  const resPerPage = 4;
+  const itemsCount = await Item.countDocuments();
+  const apiFeatures = new APIFeatures(Item.find(), req.query)
+    .search()
+    .filter()
+    .paginate(resPerPage);
+
+  const getAll = async () => {
+    return await apiFeatures.query;
+  };
+
   const items = await getAll();
 
   if (items) {
     return next(
       new AppSuccess(
-        { itemsCount: items.length, items: items },
+        { itemsCount: items.length, total: itemsCount, items: items },
         "Items successfully Send",
         SUCCESS
       )

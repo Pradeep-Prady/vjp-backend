@@ -52,7 +52,7 @@ export default async function sendEmail(options) {
       pass: process.env.SMTP_PASS,
     },
     tls: {
-      rejectUnauthorized: false, // This option allows self-signed certificates
+      rejectUnauthorized: false,  
     },
   });
 

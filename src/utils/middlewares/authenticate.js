@@ -18,7 +18,7 @@ export const isAuthenticatedUser = async (req, res, next) => {
     }
 
     const user = await getOne(decoded.id);
-
+ 
     if (!user) {
       return next(new AppError("User not found", 404));
     }
