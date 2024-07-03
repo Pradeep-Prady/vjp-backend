@@ -7,6 +7,7 @@ import {
   getOrders,
   updateOrder,
 } from "../controller/orderController.js";
+
 import {
   isAuthenticatedAdminUser,
   isAuthenticatedUser,
@@ -20,7 +21,6 @@ router.route("/order/update/:id").put(isAuthenticatedAdminUser, updateOrder);
 router.route("/orders").get(isAuthenticatedAdminUser, getOrders);
 router.route("/order/:id/admin").get(isAuthenticatedAdminUser, getAdminOrder);
 
- 
 
 // user
 
