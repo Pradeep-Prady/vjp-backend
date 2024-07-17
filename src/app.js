@@ -4,14 +4,15 @@
   import { fileURLToPath } from "url";
   import path from "path";
   import cookieParser from "cookie-parser";
-  import categoryRoute from "./src/route/category.js";
-  import userRoute from "./src/route/user.js";
-  import itemRoute from "./src/route/item.js";
-  import adminRoute from "./src/route/admin.js";
-  import orderRoute from "./src/route/order.js";
+  import categoryRoute from "./route/category.js";
+  import userRoute from "./route/user.js";
+  import itemRoute from "./route/item.js";
+  import adminRoute from "./route/admin.js";
+  import orderRoute from "./route/order.js";
+  import "./src/config/index.js";
 
-  import globalResponseController from "./src/utils/response-handlers/global-response-controller.js";
-  import verifyUserRoute from "./src/route/verifyUser.js";
+  import globalResponseController from "./utils/response-handlers/global-response-controller.js";
+  import verifyUserRoute from "./route/verifyUser.js";
   dotenv.config();
 
   const __filename = fileURLToPath(import.meta.url);
@@ -19,15 +20,21 @@
 
   const app = express();
 
+  // server connect
+
+  const DB_URL = process.env.DATABASE_URI;
+
+connectDatabase(DB_URL);
+
   const allowedOrigins = [
     "http://localhost:5173",
-    "http://localhost:8000",
+    "http://localhost:8002",
     "https://vjp.onrender.com",
     "https://aejsinfo.com",
     "http://aejsinfo.com",
     "http://127.0.0.1:5173",
   ];
-  app.use(cookieParser());
+  app.use(cookieParser());   
 
   // app.use(
   //   cors({
@@ -84,18 +91,18 @@
   app.use("/api/v1", orderRoute);
   app.use("/api/v1", verifyUserRoute);
 
-  // if (process.env.NODE_ENV === "prod") {
+  if (process.env.NODE_ENV === "prod") {
 
 
 
-    app.use(express.static(path.join(__dirname, "./dist")));
+    app.use(express.static(path.join(__dirname, "../dist")));
     app.get("*", (req, res) => {
-      res.sendFile(path.resolve(__dirname, "./dist/index.html"));
+      res.sendFile(path.resolve(__dirname, "../dist/index.html"));
     });
 
 
 
-  // }
+  }
 
   app.use(globalResponseController);
 
