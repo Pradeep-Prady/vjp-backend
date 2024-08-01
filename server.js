@@ -19,7 +19,7 @@
 //   );
 // });
 
-// // app.use(globalResponseController);
+// app.use(globalResponseController);
 
 // process.on("unhandledRejection", (err) => {
 //   console.error("Unhandled Rejection", err);
