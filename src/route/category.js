@@ -17,6 +17,9 @@ const router = Router();
 
 router.route("/category/create").post(isAuthenticatedAdminUser, CreateCategory);
 
+
+
+
 router
   .route("/category/update/:id")
   .put(isAuthenticatedAdminUser, updateCategory);
@@ -33,6 +36,15 @@ router
   .route("/category/:categoryID/:subCategoryID/delete")
   .delete(isAuthenticatedAdminUser, deleteSubCategory);
 // common
+
+
+
+
+
+
+
+
+
 
 router.route("/categories").get(getCategories);
 router.route("/category/:id").get(getCategory);

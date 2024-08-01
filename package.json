@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "set NODE_ENV=dev&&nodemon --experimental-json-modules server.js",
     "qa": "set NODE_ENV=qa&&nodemon --experimental-json-modules server.js",
-    "prod": "set NODE_ENV=prod&&node server.js"
+    "prod": "set NODE_ENV=prod&&node app.js"
   },
   "author": "Pradeep",
   "license": "ISC",

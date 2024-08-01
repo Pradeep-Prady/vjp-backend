@@ -1,6 +1,6 @@
 // import "./src/config/index.js";
 // import connectDatabase from "./database.js";
-// import app from "./src/app.js";
+// import app from "./app.js";
 
 // const DB_URL = process.env.DATABASE_URI;
 
@@ -10,7 +10,7 @@
 
 // const server = app.listen(port, () => {
 //   console.log(
-//     "VJP API " +a
+//     "VJP API " +
 //       process.env.NODE_ENV +
 //       " mode on PORT " +
 //       process.env.PORT +
