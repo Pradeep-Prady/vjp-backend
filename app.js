@@ -29,7 +29,7 @@ const allowedOrigins = [
   "http://localhost:7000",
   "http://127.0.0.1:7000",
   "https://vjp.vercel.app",
-  "https://vjp.vercel.app/"
+  "https://vjp.vercel.app/",
 ];
 app.use(cookieParser());
 
