@@ -1,0 +1,98 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Confirmation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body { background-color: #f6f6f6; font-family: "Poppins", sans-serif;
+      margin: 0; padding: 0; } .container { width: 100%; max-width: 600px;
+      margin: 30px auto; background-color: #ffffff; border: 1px solid #e0e0e0;
+      border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); overflow:
+      hidden; } .header, .footer { text-align: center; padding: 20px;
+      background-color: #f6f6f6; } .header img { max-width: 100%; height: auto;
+      } .title { font-size: 24px; text-align: center; color: #333333; margin:
+      20px 0; } .content { padding: 20px; } .content p { font-size: 16px; color:
+      #555555; line-height: 1.6; margin: 10px 0; } .content .welcome {
+      font-size: 18px; color: #333333; } .order-details, .product-details {
+      margin: 20px 0; } .order-details h2, .product-details h2 { font-size:
+      20px; color: #333333; margin-bottom: 10px; } .order-details table,
+      .product-details table { width: 100%; border-collapse: collapse; }
+      .order-details table th, .order-details table td, .product-details table
+      th, .product-details table td { border: 1px solid #e0e0e0; padding: 10px;
+      text-align: left; } .order-details table th, .product-details table th {
+      background-color: #f6f6f6; } .button-container { text-align: center;
+      margin: 30px 0; } .button-container .btn { padding: 12px 40px;
+      background-color: #007bff; color: #ffffff; border: none; border-radius:
+      4px; font-size: 16px; cursor: pointer; text-decoration: none; display:
+      inline-block; } .footer p { font-size: 14px; color: #777777; margin: 0; }
+      @media only screen and (max-width: 600px) { .container { width: 90%; }
+      .header img { width: 80%; } .content { padding: 10px; } .content p {
+      font-size: 14px; } .button-container .btn { font-size: 14px; padding: 10px
+      30px; } }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <img
+          src="{{BASE_URL}}/src/uploads/templateImages/VJPlogo.png"
+          alt="VJP Logo"
+        />
+      </div>
+      <div class="content">
+        <h1 class="title">Order Confirmation</h1>
+        <p class="welcome">Hello, <b>{{name}},</b></p>
+        <p>
+          Thank you for your order! We're excited to let you know that we've
+          received your order and it is now being processed. Below are the
+          details of your order:
+        </p>
+        <div class="order-details">
+          <h2>Order Details</h2>
+          <table>
+            <tr>
+              <th>Order ID</th>
+              <td>{{order._id}}</td>
+            </tr>
+            <tr>
+              <th>Purchase Items</th>
+              <td>{{count}}</td>
+            </tr>
+            <tr>
+              <th>Delivery Type</th>
+              <td>{{order.deliveryType.type}}</td>
+            </tr>
+            <tr>
+              <th>Payment Method</th>
+              <td>{{order.paymentMethod}}</td>
+            </tr>
+            <tr>
+              <th>Total</th>
+              <td>${{order.total}}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="button-container">
+          <a href="{{BASE_URL}}/customer/orders" class="btn">View Order</a>
+        </div>
+        <div>
+          <h2>Delivery Address</h2>
+          <p>{{user.strtAddrss}}</p>
+          <p>{{user.city}} {{user.state}}</p>
+          <p>{{user.cntry}}</p>
+          <p>{{user.zipCode}}</p>
+        </div>
+      </div>
+      <div class="footer">
+        <p>2024 &#169; All rights reserved to VJP Enterprise</p>
+      </div>
+    </div>
+  </body>
+</html>

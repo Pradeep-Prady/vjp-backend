@@ -1,0 +1,160 @@
+The deprecation warning you're seeing indicates that `fs.rmdir` with the `recursive` option will be removed in future versions of Node.js. Instead, you should use `fs.rm` with the `recursive` option. 
+
+Here's how you can update your code to use `fs.rm` for deleting directories recursively:
+
+### Updated Code to Use `fs.rm`:
+
+1. **Import `fs` module:**
+   ```javascript
+   import fs from 'fs';
+   import path from 'path';
+   ```
+
+2. **Delete Item Function with Folder Deletion:**
+   ```javascript
+   export const deleteItem = async (req, res, next) => {
+     const { id } = req.params;
+
+     if (_.isEmpty(id)) {
+       return next(new AppError("Item id is required", 400));
+     }
+
+     // Fetch the item to get the associated category and image paths
+     const item = await getOne(id);
+     if (!item) {
+       return next(new AppError("Item not found", 404));
+     }
+
+     // Remove the item reference from the category
+     if (item.category) {
+       const category = await getCategory(item.category);
+       if (category) {
+         category.items = category.items.filter(
+           (itemId) => itemId.toString() !== id
+         );
+         await category.save();
+       }
+     }
+
+     // Remove the item
+     const deletedItem = await remove(id);
+     if (!deletedItem) {
+       return next(new AppError("Something went wrong", 400));
+     }
+
+     // Delete the item's images and folder
+     if (item.images && item.images.length > 0) {
+       const folderPath = path.dirname(item.images[0]);
+       try {
+         console.log(`Attempting to delete folder at path: ${folderPath}`);
+         fs.rmSync(folderPath, { recursive: true, force: true });
+         console.log(`Successfully deleted folder: ${folderPath}`);
+       } catch (err) {
+         console.error(`Failed to delete folder: ${folderPath}`, err);
+       }
+     }
+
+     return next(new AppSuccess(deletedItem, "Item Deleted successfully", 200));
+   };
+   ```
+
+3. **Delete Subcategory Function with Item Folder Deletion:**
+   ```javascript
+   export const deleteSubCategory = async (req, res, next) => {
+     const { categoryID, subCategoryID } = req.params;
+
+     if (_.isEmpty(categoryID) || _.isEmpty(subCategoryID)) {
+       return next(
+         new AppError("Category ID and Subcategory ID are required", 400)
+       );
+     }
+
+     const category = await getOne(categoryID);
+     if (!category) {
+       return next(new AppError("Category not found", 404));
+     }
+
+     const subCategoryIndex = category.subCategorys.findIndex(
+       (sub) => sub._id.toString() === subCategoryID
+     );
+     if (subCategoryIndex === -1) {
+       return next(
+         new AppError("Subcategory not found in the specified category", 404)
+       );
+     }
+
+     // Remove items associated with this subcategory
+     const items = await Item.find({ subCategoryId: subCategoryID });
+     for (let item of items) {
+       if (item.images && item.images.length > 0) {
+         const folderPath = path.dirname(item.images[0]);
+         try {
+           console.log(`Attempting to delete folder at path: ${folderPath}`);
+           fs.rmSync(folderPath, { recursive: true, force: true });
+           console.log(`Successfully deleted folder: ${folderPath}`);
+         } catch (err) {
+           console.error(`Failed to delete folder: ${folderPath}`, err);
+         }
+       }
+       await Item.findByIdAndDelete(item._id);
+     }
+
+     // Remove the subcategory from the category
+     const updatedOne = await removeSub(categoryID, subCategoryID);
+
+     return next(
+       new AppSuccess(
+         updatedOne,
+         "Subcategory and its items removed successfully",
+         200
+       )
+     );
+   };
+   ```
+
+4. **Delete Category Function with Subcategory and Item Folder Deletion:**
+   ```javascript
+   export const deleteCategory = async (req, res, next) => {
+     const { id } = req.params;
+
+     if (_.isEmpty(id)) {
+       return next(new AppError("Category id is required", 400));
+     }
+
+     const category = await getOne(id);
+     if (!category) {
+       return next(new AppError("Category not found", 404));
+     }
+
+     // Delete all items under this category
+     const items = await Item.find({ category: id });
+     for (let item of items) {
+       if (item.images && item.images.length > 0) {
+         const folderPath = path.dirname(item.images[0]);
+         try {
+           console.log(`Attempting to delete folder at path: ${folderPath}`);
+           fs.rmSync(folderPath, { recursive: true, force: true });
+           console.log(`Successfully deleted folder: ${folderPath}`);
+         } catch (err) {
+           console.error(`Failed to delete folder: ${folderPath}`, err);
+         }
+       }
+       await Item.findByIdAndDelete(item._id);
+     }
+
+     // Delete the category
+     await remove(id);
+
+     return next(
+       new AppSuccess(category, "Category and its items deleted successfully", 200)
+     );
+   };
+   ```
+
+### Important Points:
+
+- **Permissions:** Ensure that the directories and files have the correct permissions so that your Node.js process can delete them.
+- **Error Handling:** Include proper error handling to manage any issues that arise during the deletion process.
+- **Testing:** Thoroughly test these changes in a development environment before deploying to production to ensure that everything works as expected.
+
+By following these steps, you should be able to manage and delete directories and files correctly both locally and on your hosted environment.
