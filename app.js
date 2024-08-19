@@ -28,6 +28,8 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:7000",
   "http://127.0.0.1:7000",
+  "https://vjp-backend.onrender.com",
+  "http://vjp-backend.onrender.com",
 ];
 app.use(cookieParser());
 
